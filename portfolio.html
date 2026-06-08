@@ -1,51 +1,61 @@
-portfolio.html
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    Your Name - Portfolio
+    <title>X/i\D | Portfolio</title>
+    <meta name="description" content="Creative portfolio for X/i\D including music, production, visuals, branding, and collaborative projects.">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home / Link Bio</a></li>
-                <li><a href="epk.html">EPK</a></li>
-                <li><a href="portfolio.html">Portfolio</a></li>
-            </ul>
+    <header class="site-header">
+        <a class="brand" href="index.html">X/i\D</a>
+        <nav class="site-nav" aria-label="Primary navigation">
+            <a href="index.html#links">Links</a>
+            <a href="epk.html">EPK</a>
+            <a href="index.html#music">Music</a>
+            <a href="beatstore.html">Beats</a>
+            <a href="portfolio.html" aria-current="page">Portfolio</a>
+            <a href="index.html#contact">Contact</a>
         </nav>
     </header>
 
     <main>
-        <section id="portfolio-intro">
-            <h1>My Portfolio</h1>
-            <p>Welcome to my portfolio. Here you'll find a selection of my creative projects.</p>
+        <section class="hero compact section-band">
+            <div class="hero-copy">
+                <p class="eyebrow">Selected work</p>
+                <h1>Portfolio</h1>
+                <p class="lead">A place for releases, production credits, visual direction, cover art, live work, and collaboration case studies.</p>
+            </div>
         </section>
 
-        <section id="portfolio-items">
-            <div class="portfolio-item">
-                <h3>Project Title 1</h3>
-                <img src="path/to/your/project1-thumbnail.jpg" alt="Project 1 Thumbnail">
-                <p>[Short description of Project 1. What was your role? What did you achieve?]</p>
-                <a href="#">View Project / More Details</a>
+        <section class="section-band">
+            <div class="portfolio-grid">
+                <article class="project-card">
+                    <img src="assets/project-1.svg" alt="Project artwork placeholder">
+                    <h2>Release Campaign</h2>
+                    <p>Replace with a single, EP, album, or campaign. Add your role, tools, release date, and result.</p>
+                    <a href="#">View Project</a>
+                </article>
+                <article class="project-card">
+                    <img src="assets/project-2.svg" alt="Project artwork placeholder">
+                    <h2>Production Credit</h2>
+                    <p>Showcase beats, engineering, arrangement, mixing, mastering, or collaborative production.</p>
+                    <a href="#">View Credit</a>
+                </article>
+                <article class="project-card">
+                    <img src="assets/project-3.svg" alt="Project artwork placeholder">
+                    <h2>Visual Direction</h2>
+                    <p>Add music videos, cover art, motion loops, live visuals, photoshoots, or brand systems.</p>
+                    <a href="#">View Visuals</a>
+                </article>
             </div>
-
-            <div class="portfolio-item">
-                <h3>Project Title 2</h3>
-                <img src="path/to/your/project2-thumbnail.jpg" alt="Project 2 Thumbnail">
-                <p>[Short description of Project 2. What was your role? What did you achieve?]</p>
-                <a href="#">View Project / More Details</a>
-            </div>
-
-            <!-- Add more portfolio items as needed -->
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2023 Your Name. All rights reserved.</p>
+        <p>&copy; <span id="year"></span> X/i\D | FAKE Entertainment. All rights reserved.</p>
     </footer>
+    <script src="site.js"></script>
 </body>
 </html>
