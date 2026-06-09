@@ -81,6 +81,24 @@ function prettyName(fileName) {
     return basename(fileName).replace(/[-_]+/g, " ").replace(/\b\w/g, letter => letter.toUpperCase());
 }
 
+function escapeHtml(value) {
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function releaseNameFromPath(track) {
+    if (track.album) return track.album;
+    const parts = String(track.path || "").split("/");
+    if (track.category === "EPs") return parts[2] || track.category;
+    if (track.category === "Albums and Mixtapes") return parts[2] || track.category;
+    if (track.category === "Compilations") return parts[2] || track.category;
+    return track.category;
+}
+
 async function metadataFor(audioFile, files) {
     const audioBase = basename(audioFile.name).toLowerCase();
     const folderFiles = files.filter(file => file.path.substring(0, file.path.lastIndexOf("/")) === audioFile.path.substring(0, audioFile.path.lastIndexOf("/")));
@@ -187,20 +205,72 @@ function setupTabs(tracks) {
 
 function renderTracks(tracks, container) {
     const hasDockedPlayer = Boolean(document.querySelector("#main-audio"));
-    container.innerHTML = tracks.map((track, index) => `
-        <article class="release-card">
-            ${track.coverUrl ? `<img src="${track.coverUrl}" alt="${track.title} cover art">` : ""}
-            <div class="card-body">
-                <h3>${track.title}</h3>
-                <p class="card-meta">${[track.artist, track.album, track.category].filter(Boolean).join(" / ")}</p>
-                ${hasDockedPlayer ? `<button class="button primary" type="button" data-track-index="${index}">Play</button>` : `<audio controls preload="metadata" src="${track.audioUrl}"></audio>`}
-            </div>
-        </article>
-    `).join("");
+    const singles = tracks.map((track, index) => ({ ...track, originalIndex: index })).filter(track => track.category === "Singles");
+    const groupedTracks = tracks.map((track, index) => ({ ...track, originalIndex: index })).filter(track => track.category !== "Singles");
+    const releaseGroups = new Map();
+
+    groupedTracks.forEach(track => {
+        const releaseName = releaseNameFromPath(track);
+        const key = `${track.category}-${releaseName}`;
+        if (!releaseGroups.has(key)) {
+            releaseGroups.set(key, {
+                title: releaseName,
+                category: track.category,
+                coverUrl: track.coverUrl,
+                tracks: []
+            });
+        }
+        const group = releaseGroups.get(key);
+        if (!group.coverUrl && track.coverUrl) group.coverUrl = track.coverUrl;
+        group.tracks.push(track);
+    });
+
+    const singlesHtml = singles.map(track => renderSingleTrackCard(track, hasDockedPlayer)).join("");
+    const groupHtml = [...releaseGroups.values()].map(group => renderReleaseFolder(group, hasDockedPlayer)).join("");
+    container.innerHTML = singlesHtml + groupHtml;
 
     container.querySelectorAll("[data-track-index]").forEach(button => {
         button.addEventListener("click", () => setPlayerTrack(tracks[Number(button.dataset.trackIndex)]));
     });
+}
+
+function renderSingleTrackCard(track, hasDockedPlayer) {
+    return `
+        <article class="release-card">
+            ${track.coverUrl ? `<img src="${track.coverUrl}" alt="${escapeHtml(track.title)} cover art">` : ""}
+            <div class="card-body">
+                <h3>${escapeHtml(track.title)}</h3>
+                <p class="card-meta">${escapeHtml([track.artist, track.album, track.category].filter(Boolean).join(" / "))}</p>
+                ${hasDockedPlayer ? `<button class="button primary" type="button" data-track-index="${track.originalIndex}">Play</button>` : `<audio controls preload="metadata" src="${track.audioUrl}"></audio>`}
+            </div>
+        </article>
+    `;
+}
+
+function renderReleaseFolder(group, hasDockedPlayer) {
+    return `
+        <details class="music-folder">
+            <summary>
+                ${group.coverUrl ? `<img src="${group.coverUrl}" alt="${escapeHtml(group.title)} cover art">` : `<span class="folder-art"></span>`}
+                <span class="folder-copy">
+                    <strong>${escapeHtml(group.title)}</strong>
+                    <small>${escapeHtml(group.category)} / ${group.tracks.length} song${group.tracks.length === 1 ? "" : "s"}</small>
+                </span>
+                <span class="folder-toggle">Open</span>
+            </summary>
+            <div class="folder-tracks">
+                ${group.tracks.map(track => `
+                    <div class="folder-track-row">
+                        <span>
+                            <strong>${escapeHtml(track.title)}</strong>
+                            <small>${escapeHtml(track.artist || "X/i\\D")}</small>
+                        </span>
+                        ${hasDockedPlayer ? `<button class="button primary" type="button" data-track-index="${track.originalIndex}">Play</button>` : `<audio controls preload="metadata" src="${track.audioUrl}"></audio>`}
+                    </div>
+                `).join("")}
+            </div>
+        </details>
+    `;
 }
 
 function setupFeatured(track) {
@@ -288,5 +358,6 @@ function loadLiveSection() {
         `).join("");
     }
 }
+
 
 
