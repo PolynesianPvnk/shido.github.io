@@ -18,6 +18,7 @@ const SITE_CONFIG = {
 
 const AUDIO_EXTENSIONS = [".mp3", ".wav", ".m4a", ".flac"];
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
+const MUSIC_MANIFEST = "music-manifest.json";
 const MUSIC_FOLDERS = [
     { label: "Singles", path: "Music/Singles" },
     { label: "EPs", path: "Music/EPs" },
@@ -123,13 +124,36 @@ async function buildTracks(folder) {
     return tracks.map(track => ({ ...track, category: folder.label }));
 }
 
+async function loadMusicManifest() {
+    try {
+        const response = await fetch(`${MUSIC_MANIFEST}?v=${Date.now()}`);
+        if (!response.ok) return [];
+        const tracks = await response.json();
+        return tracks.map(track => ({
+            ...track,
+            audioUrl: encodeURI(track.audioUrl),
+            coverUrl: track.coverUrl ? encodeURI(track.coverUrl) : ""
+        }));
+    } catch {
+        return [];
+    }
+}
+
 async function loadMusicLibrary() {
     const library = document.querySelector("#music-library");
     if (!library) return;
 
-    library.innerHTML = "<p class=\"muted\">Loading music from GitHub...</p>";
-    const allGroups = await Promise.all(MUSIC_FOLDERS.map(buildTracks));
-    const tracks = allGroups.flat();
+    const isLocalPreview = ["", "localhost", "127.0.0.1"].includes(window.location.hostname);
+    library.innerHTML = `<p class="muted">Loading music from ${isLocalPreview ? "local manifest" : "GitHub"}...</p>`;
+
+    let tracks = [];
+    if (isLocalPreview) {
+        tracks = await loadMusicManifest();
+    } else {
+        const allGroups = await Promise.all(MUSIC_FOLDERS.map(buildTracks));
+        tracks = allGroups.flat();
+        if (!tracks.length) tracks = await loadMusicManifest();
+    }
     const limit = Number(library.dataset.limit || 0);
     const visibleTracks = limit ? tracks.slice(0, limit) : tracks;
 
@@ -264,3 +288,5 @@ function loadLiveSection() {
         `).join("");
     }
 }
+
+
