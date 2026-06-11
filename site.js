@@ -2,7 +2,7 @@ const SITE_CONFIG = {
     owner: "PolynesianPvnk",
     repo: "shido.github.io",
     branch: "main",
-    contactEmail: "your.email@example.com",
+    contactEmail: "shidomusic275@gmail.com",
     live: {
         playerEmbed: "",
         chatEmbed: "",
@@ -131,7 +131,8 @@ async function metadataFor(audioFile, files) {
         paymentUrl: metadata.paymentUrl || metadata.paypal || metadata.stripe || "",
         audioUrl: audioFile.download_url,
         coverUrl: coverFile ? coverFile.download_url : "",
-        path: audioFile.path
+        path: audioFile.path,
+        trackNumber: metadata.trackNumber || metadata.track || 0
     };
 }
 

@@ -16,7 +16,7 @@ Music/Singles/My Song/
   metadata.json
 ```
 
-Example metadata:
+Example metadata for Singles:
 
 ```json
 {
@@ -24,6 +24,18 @@ Example metadata:
   "artist": "X/i\\D",
   "album": "Single",
   "cover": "cover.jpg"
+}
+```
+
+Example metadata for EPs, Albums, and Compilations:
+
+```json
+{
+  "title": "My Song",
+  "artist": "X/i\\D",
+  "album": "Project Name",
+  "cover": "cover.jpg",
+  "trackNumber": 1
 }
 ```
 

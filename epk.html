@@ -9,7 +9,7 @@
 </head>
 <body>
     <header class="site-header">
-        <a class="brand" href="index.html">X/i\D</a>
+        <a class="brand" href="index.html" aria-label="X/i\D home">X/i\D</a>
         <nav class="site-nav" aria-label="Primary navigation">
             <a href="index.html#links">Links</a>
             <a href="link.html">All Links</a>
@@ -17,6 +17,8 @@
             <a href="index.html#music">Music</a>
             <a href="beatstore.html">Beats</a>
             <a href="portfolio.html">Portfolio</a>
+            <a href="index.html#submissions">Submissions</a>
+            <a href="index.html#live">Live</a>
             <a href="index.html#contact">Contact</a>
         </nav>
     </header>
@@ -31,7 +33,7 @@
             <div class="stat-grid">
                 <div><strong>Genre</strong><span>Alternative hip-hop / production</span></div>
                 <div><strong>Location</strong><span>Update city or region</span></div>
-                <div><strong>Booking</strong><span>your.email@example.com</span></div>
+                <div><strong>Booking</strong><span>shidomusic275@gmail.com</span></div>
             </div>
         </section>
 
@@ -49,7 +51,17 @@
                 <p class="eyebrow">Listen</p>
                 <h2>Featured Music</h2>
             </div>
-            <div class="release-grid" id="music-library" data-limit="6"></div>
+            <div class="tabs" id="music-tabs" role="tablist" aria-label="Music categories"></div>
+            <div class="music-layout">
+                <div class="release-grid" id="music-library" data-limit="6" aria-live="polite"></div>
+                <aside class="player-dock" aria-label="Music player">
+                    <img id="player-art" src="" alt="" hidden>
+                    <p class="panel-label">Selected track</p>
+                    <h3 id="player-title">No track selected</h3>
+                    <p class="muted" id="player-meta">Choose a song from the library.</p>
+                    <audio id="main-audio" controls preload="metadata"></audio>
+                </aside>
+            </div>
         </section>
 
         <section class="section-band">
@@ -89,7 +101,7 @@
                 <p class="eyebrow">Contact</p>
                 <h2>Booking and Press</h2>
             </div>
-            <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
+            <p>Email: <a href="mailto:shidomusic275@gmail.com">shidomusic275@gmail.com</a></p>
             <p>Management: Add management or publicist contact when ready.</p>
         </section>
     </main>

@@ -1,21 +1,21 @@
 [
   {
-    "title": "4LLR1Z3",
+    "title": "4LLR1Z3 (feat. T Swerve)",
     "artist": "X/i\\D",
     "album": "4LLR1Z3",
     "category": "Singles",
-    "audioUrl": "Music/Singles/4LLR1Z3/4LLR1Z3.wav",
+    "audioUrl": "Music/Singles/4LLR1Z3/4LLR1Z3 (feat. T Swerve).wav",
     "coverUrl": "Music/Singles/4LLR1Z3/cover.jpg",
-    "path": "Music/Singles/4LLR1Z3/4LLR1Z3.wav"
+    "path": "Music/Singles/4LLR1Z3/4LLR1Z3 (feat. T Swerve).wav"
   },
   {
-    "title": "BÊTTR DÅYZZ",
+    "title": "BÊTTR DÅYZZ (feat. T Swerve)",
     "artist": "X/i\\D",
-    "album": "Single",
+    "album": "STÜÑTĪN SZN",
     "category": "Singles",
-    "audioUrl": "Music/Singles/BÊTTR DÅYZZ/BÊTTR DÅYZZ.wav",
+    "audioUrl": "Music/Singles/BÊTTR DÅYZZ/BÊTTR DÅYZZ (feat. T Swerve).wav",
     "coverUrl": "Music/Singles/BÊTTR DÅYZZ/cover.jpg",
-    "path": "Music/Singles/BÊTTR DÅYZZ/BÊTTR DÅYZZ.wav"
+    "path": "Music/Singles/BÊTTR DÅYZZ/BÊTTR DÅYZZ (feat. T Swerve).wav"
   },
   {
     "title": "DeDdwr0ng",
@@ -24,7 +24,8 @@
     "category": "EPs",
     "audioUrl": "Music/EPs/The JailBreakk/DeDdwr0ng.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
-    "path": "Music/EPs/The JailBreakk/DeDdwr0ng.wav"
+    "path": "Music/EPs/The JailBreakk/DeDdwr0ng.wav",
+    "trackNumber": 2
   },
   {
     "title": "DrVgGaH",
@@ -33,7 +34,8 @@
     "category": "EPs",
     "audioUrl": "Music/EPs/The JailBreakk/DrVgGaH.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
-    "path": "Music/EPs/The JailBreakk/DrVgGaH.wav"
+    "path": "Music/EPs/The JailBreakk/DrVgGaH.wav",
+    "trackNumber": 3
   },
   {
     "title": "InTtaKke",
@@ -42,7 +44,8 @@
     "category": "EPs",
     "audioUrl": "Music/EPs/The JailBreakk/InTtaKke.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
-    "path": "Music/EPs/The JailBreakk/InTtaKke.wav"
+    "path": "Music/EPs/The JailBreakk/InTtaKke.wav",
+    "trackNumber": 1
   },
   {
     "title": "SstaRrG4Tt3",
@@ -51,7 +54,8 @@
     "category": "EPs",
     "audioUrl": "Music/EPs/The JailBreakk/SstaRrG4Tt3.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
-    "path": "Music/EPs/The JailBreakk/SstaRrG4Tt3.wav"
+    "path": "Music/EPs/The JailBreakk/SstaRrG4Tt3.wav",
+    "trackNumber": 4
   },
   {
     "title": "Trip2Thailand",
@@ -60,6 +64,7 @@
     "category": "EPs",
     "audioUrl": "Music/EPs/The JailBreakk/Trip2Thailand.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
-    "path": "Music/EPs/The JailBreakk/Trip2Thailand.wav"
+    "path": "Music/EPs/The JailBreakk/Trip2Thailand.wav",
+    "trackNumber": 5
   }
 ]
