@@ -28,6 +28,16 @@ Example metadata for Singles:
 }
 ```
 
+Example metadata for EPs
+
+{
+  "title": "My Song",
+  "artist": "X/i\\D",
+  "album": "Project Name",
+  "cover": "cover.jpg",
+  "trackNumber": 1,
+}
+
 Example metadata for EPs, Albums, and Compilations:
 
 ```json
