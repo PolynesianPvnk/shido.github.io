@@ -23,7 +23,8 @@ Example metadata for Singles:
   "title": "My Song",
   "artist": "X/i\\D",
   "album": "Single",
-  "cover": "cover.jpg"
+  "cover": "cover.jpg",
+  "year": "2026"
 }
 ```
 
@@ -35,7 +36,8 @@ Example metadata for EPs, Albums, and Compilations:
   "artist": "X/i\\D",
   "album": "Project Name",
   "cover": "cover.jpg",
-  "trackNumber": 1
+  "trackNumber": 1,
+  "year": "2026"
 }
 ```
 
