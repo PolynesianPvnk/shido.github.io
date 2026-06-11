@@ -39,4 +39,17 @@ Example metadata for EPs, Albums, and Compilations:
 }
 ```
 
+Example info.json config (placed in the release folder for the credits pop-out):
+
+```json
+{
+  "description": "A brief description of the single, EP, album, or mixtape.",
+  "releaseDate": "June 12, 2026",
+  "producers": ["Producer A", "Producer B"],
+  "writers": ["Writer A"],
+  "performers": ["Main Artist", "Featured Artist"],
+  "label": "FAKE Entertainment"
+}
+```
+
 Supported audio formats: MP3, WAV, M4A, FLAC.

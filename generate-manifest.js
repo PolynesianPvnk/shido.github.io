@@ -92,6 +92,9 @@ function scanMusic() {
                 const relAudioPath = `Music/${cat}/${release}/${audio}`;
                 const relCoverPath = coverFile ? `Music/${cat}/${release}/${coverFile}` : '';
 
+                const audioStats = fs.statSync(path.join(releasePath, audio));
+                const defaultDate = audioStats.mtime.toISOString().split('T')[0];
+
                 tracks.push({
                     title: metadata.title || prettyName(audio),
                     artist: metadata.artist || metadata.producer || 'X/i\\D',
@@ -100,6 +103,8 @@ function scanMusic() {
                     audioUrl: relAudioPath,
                     coverUrl: relCoverPath,
                     path: relAudioPath,
+                    date: metadata.date || defaultDate,
+                    year: metadata.year || metadata.releaseYear || undefined,
                     ...(displayCategory !== 'Singles' && { trackNumber: metadata.trackNumber || metadata.track || 0 })
                 });
             }

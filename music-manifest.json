@@ -1,12 +1,25 @@
 [
   {
+    "title": "0C34N 3Y3Z",
+    "artist": "X/i\\D",
+    "album": "0C34N 3Y3Z",
+    "category": "Singles",
+    "audioUrl": "Music/Singles/0C34N 3Y3Z/0C34N 3Y3Z.wav",
+    "coverUrl": "Music/Singles/0C34N 3Y3Z/cover.jpg",
+    "path": "Music/Singles/0C34N 3Y3Z/0C34N 3Y3Z.wav",
+    "date": "2026-06-12",
+    "year": "2026"
+  },
+  {
     "title": "4LLR1Z3 (feat. T Swerve)",
     "artist": "X/i\\D",
     "album": "4LLR1Z3",
     "category": "Singles",
     "audioUrl": "Music/Singles/4LLR1Z3/4LLR1Z3 (feat. T Swerve).wav",
     "coverUrl": "Music/Singles/4LLR1Z3/cover.jpg",
-    "path": "Music/Singles/4LLR1Z3/4LLR1Z3 (feat. T Swerve).wav"
+    "path": "Music/Singles/4LLR1Z3/4LLR1Z3 (feat. T Swerve).wav",
+    "date": "2026-06-01",
+    "year": "2026"
   },
   {
     "title": "BÊTTR DÅYZZ (feat. T Swerve)",
@@ -15,7 +28,9 @@
     "category": "Singles",
     "audioUrl": "Music/Singles/BÊTTR DÅYZZ/BÊTTR DÅYZZ (feat. T Swerve).wav",
     "coverUrl": "Music/Singles/BÊTTR DÅYZZ/cover.jpg",
-    "path": "Music/Singles/BÊTTR DÅYZZ/BÊTTR DÅYZZ (feat. T Swerve).wav"
+    "path": "Music/Singles/BÊTTR DÅYZZ/BÊTTR DÅYZZ (feat. T Swerve).wav",
+    "date": "2026-06-05",
+    "year": "2026"
   },
   {
     "title": "DeDdwr0ng",
@@ -25,7 +40,9 @@
     "audioUrl": "Music/EPs/The JailBreakk/DeDdwr0ng.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
     "path": "Music/EPs/The JailBreakk/DeDdwr0ng.wav",
-    "trackNumber": 2
+    "trackNumber": 2,
+    "date": "2026-06-11",
+    "year": "2026"
   },
   {
     "title": "DrVgGaH",
@@ -35,7 +52,9 @@
     "audioUrl": "Music/EPs/The JailBreakk/DrVgGaH.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
     "path": "Music/EPs/The JailBreakk/DrVgGaH.wav",
-    "trackNumber": 3
+    "trackNumber": 4,
+    "date": "2026-06-11",
+    "year": "2026"
   },
   {
     "title": "InTtaKke",
@@ -45,7 +64,9 @@
     "audioUrl": "Music/EPs/The JailBreakk/InTtaKke.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
     "path": "Music/EPs/The JailBreakk/InTtaKke.wav",
-    "trackNumber": 1
+    "trackNumber": 5,
+    "date": "2026-06-11",
+    "year": "2026"
   },
   {
     "title": "SstaRrG4Tt3",
@@ -55,7 +76,9 @@
     "audioUrl": "Music/EPs/The JailBreakk/SstaRrG4Tt3.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
     "path": "Music/EPs/The JailBreakk/SstaRrG4Tt3.wav",
-    "trackNumber": 4
+    "trackNumber": 3,
+    "date": "2026-06-11",
+    "year": "2026"
   },
   {
     "title": "Trip2Thailand",
@@ -65,6 +88,8 @@
     "audioUrl": "Music/EPs/The JailBreakk/Trip2Thailand.wav",
     "coverUrl": "Music/EPs/The JailBreakk/cover.jpg.jpg",
     "path": "Music/EPs/The JailBreakk/Trip2Thailand.wav",
-    "trackNumber": 5
+    "trackNumber": 1,
+    "date": "2026-06-12",
+    "year": "2026"
   }
 ]
