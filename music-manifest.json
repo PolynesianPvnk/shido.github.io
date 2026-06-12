@@ -106,17 +106,6 @@
     "trackNumber": 5
   },
   {
-    "title": "15. Remember Summer Days",
-    "artist": "X/i\\D",
-    "album": "夜冬 2X23",
-    "category": "Compilations",
-    "audioUrl": "Music/Compilations/夜冬 2X23/15. Remember Summer Days.wav",
-    "coverUrl": "Music/Compilations/夜冬 2X23/cover.jpg",
-    "path": "Music/Compilations/夜冬 2X23/15. Remember Summer Days.wav",
-    "date": "2026-06-11",
-    "trackNumber": 0
-  },
-  {
     "title": "3K Vision - Why",
     "artist": "X/i\\D",
     "album": "夜冬 2X23",
@@ -187,6 +176,18 @@
     "date": "2026-06-11",
     "year": "2023",
     "trackNumber": 1
+  },
+  {
+    "title": "Remember Summer Days",
+    "artist": "X/i\\D",
+    "album": "夜冬 2X23",
+    "category": "Compilations",
+    "audioUrl": "Music/Compilations/夜冬 2X23/Remember Summer Days.wav",
+    "coverUrl": "Music/Compilations/夜冬 2X23/cover.jpg",
+    "path": "Music/Compilations/夜冬 2X23/Remember Summer Days.wav",
+    "date": "2026-06-11",
+    "year": "2023",
+    "trackNumber": 15
   },
   {
     "title": "rere",
@@ -273,16 +274,16 @@
     "trackNumber": 11
   },
   {
-    "title": "『シド』夜冬 2X23 (路上で夢を見る future funk flip)",
+    "title": "My Song",
     "artist": "X/i\\D",
-    "album": "夜冬 2X23",
+    "album": "Project ",
     "category": "Compilations",
     "audioUrl": "Music/Compilations/夜冬 2X23/『シド』夜冬 2X23 (路上で夢を見る future funk flip).wav",
     "coverUrl": "Music/Compilations/夜冬 2X23/cover.jpg",
     "path": "Music/Compilations/夜冬 2X23/『シド』夜冬 2X23 (路上で夢を見る future funk flip).wav",
     "date": "2026-06-11",
-    "year": "2023",
-    "trackNumber": 14
+    "year": "2026",
+    "trackNumber": 1
   },
   {
     "title": "DeDdwr0ng",
