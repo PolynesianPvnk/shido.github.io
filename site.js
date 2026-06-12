@@ -28,7 +28,7 @@ const MUSIC_FOLDERS = [
 
 document.addEventListener("DOMContentLoaded", () => {
     const year = document.querySelector("#year");
-    if (year) year.textContent = new Date().getFullYear();
+    if (year) year.textContent = new Date("year").getFullYear();
 
     initInfoModal();
     loadMusicLibrary();
@@ -61,14 +61,14 @@ function initInfoModal() {
         </div>
     `;
     document.body.insertAdjacentHTML("beforeend", modalHtml);
-    
+
     const overlay = document.querySelector("#info-modal-overlay");
     const closeBtn = document.querySelector("#info-modal-close");
-    
+
     closeBtn.addEventListener("click", () => {
         overlay.hidden = true;
     });
-    
+
     overlay.addEventListener("click", (event) => {
         if (event.target === overlay) {
             overlay.hidden = true;
@@ -99,7 +99,7 @@ async function openInfoModal(track) {
 
     modalTitle.textContent = track.album || track.title;
     modalMeta.textContent = `${track.artist} / ${track.category}`;
-    
+
     loading.style.display = "block";
     modalBody.style.display = "none";
     overlay.hidden = false;
@@ -110,21 +110,21 @@ async function openInfoModal(track) {
         const response = await fetch(infoUrl + "?v=" + Date.now());
         if (!response.ok) throw new Error("File not found");
         const info = await response.json();
-        
+
         document.querySelector("#modal-description").textContent = info.description || "No description provided.";
         document.querySelector("#modal-date").textContent = info.releaseDate || info.release_date || "Unknown";
-        
+
         const performersText = Array.isArray(info.performers) ? info.performers.join(", ") : (info.performers || info.performer || "N/A");
         const producersText = Array.isArray(info.producers) ? info.producers.join(", ") : (info.producers || "N/A");
         const writersText = Array.isArray(info.writers) ? info.writers.join(", ") : (info.writers || "N/A");
-        
+
         document.querySelector("#modal-performers").textContent = performersText;
         document.querySelector("#modal-producers").textContent = producersText;
         document.querySelector("#modal-writers").textContent = writersText;
-        
+
         const labelName = info.label || "Independent";
         document.querySelector("#modal-label-credit").textContent = `Provided by ${labelName}.`;
-        
+
         loading.style.display = "none";
         modalBody.style.display = "block";
     } catch (error) {
@@ -134,7 +134,7 @@ async function openInfoModal(track) {
         document.querySelector("#modal-producers").textContent = "N/A";
         document.querySelector("#modal-writers").textContent = "N/A";
         document.querySelector("#modal-label-credit").textContent = "";
-        
+
         loading.style.display = "none";
         modalBody.style.display = "block";
     }
@@ -437,7 +437,7 @@ function setPlayerTrack(track) {
     if (!audio) return;
 
     audio.src = track.audioUrl;
-    audio.play().catch(() => {});
+    audio.play().catch(() => { });
     if (title) title.textContent = track.title;
     if (meta) meta.textContent = [track.artist, track.album, track.category].filter(Boolean).join(" / ");
     if (art && track.coverUrl) {
