@@ -312,7 +312,7 @@ function setupTabs() {
     const tabs = document.querySelector("#music-tabs");
     if (!tabs) return;
 
-    const categories = ["All", ...new Set(allMusicTracks.map(track => track.category))];
+    const categories = ["All", "Singles", "EPs", "Albums and Mixtapes", "Compilations"];
     tabs.innerHTML = categories.map((category, index) => `<button class="button ${index === 0 ? "active" : ""}" type="button" data-category="${category}">${category}</button>`).join("");
 
     tabs.addEventListener("click", event => {
@@ -403,33 +403,38 @@ function renderTracks(tracks, container) {
         });
     });
 
-    const items = [
-        ...singles.map(track => ({
-            date: track.date || "",
-            year: track.year || "",
-            html: renderSingleTrackCard(track, hasDockedPlayer)
-        })),
-        ...[...releaseGroups.values()].map(group => {
-            const groupDates = group.tracks.map(t => t.date).filter(Boolean);
-            const latestDate = groupDates.length > 0 ? [...groupDates].sort().reverse()[0] : "";
-            const groupYear = group.tracks.find(t => t.year)?.year;
-            return {
-                date: latestDate,
-                year: groupYear || "",
-                html: renderReleaseFolder(group, hasDockedPlayer)
-            };
-        })
-    ];
+    const singlesList = singles.map(track => ({
+        date: track.date || "",
+        year: track.year || "",
+        html: renderSingleTrackCard(track, hasDockedPlayer)
+    }));
 
-    // Sort chronologically (most recent first)
-    items.sort((a, b) => {
+    const groupsList = [...releaseGroups.values()].map(group => {
+        const groupDates = group.tracks.map(t => t.date).filter(Boolean);
+        const latestDate = groupDates.length > 0 ? [...groupDates].sort().reverse()[0] : "";
+        const groupYear = group.tracks.find(t => t.year)?.year;
+        return {
+            date: latestDate,
+            year: groupYear || "",
+            html: renderReleaseFolder(group, hasDockedPlayer)
+        };
+    });
+
+    const sortByChronology = (a, b) => {
         const yearA = a.year || (a.date ? a.date.split('-')[0] : "");
         const yearB = b.year || (b.date ? b.date.split('-')[0] : "");
         if (yearA !== yearB) {
             return yearB.localeCompare(yearA);
         }
         return b.date.localeCompare(a.date);
-    });
+    };
+
+    // Sort Singles and Folders separately chronologically (most recent first)
+    singlesList.sort(sortByChronology);
+    groupsList.sort(sortByChronology);
+
+    // Group all Singles first, followed by Folders
+    const items = [...singlesList, ...groupsList];
 
     container.innerHTML = items.map(item => item.html).join("");
 
