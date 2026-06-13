@@ -340,7 +340,10 @@ function renderTracks(tracks, container) {
             });
         }
         const group = releaseGroups.get(key);
-        if (!group.coverUrl && track.coverUrl) group.coverUrl = track.coverUrl;
+        const isMainCover = track.coverUrl && /\/cover\.(jpg|jpeg|png|webp|gif)/i.test(track.coverUrl.split('?')[0]);
+        if (isMainCover || (!group.coverUrl && track.coverUrl)) {
+            group.coverUrl = track.coverUrl;
+        }
         group.tracks.push(track);
     });
 
