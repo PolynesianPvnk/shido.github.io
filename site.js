@@ -26,6 +26,10 @@ const MUSIC_FOLDERS = [
     { label: "Compilations", path: "Music/Compilations" }
 ];
 
+let allMusicTracks = [];
+let currentMusicCategory = "All";
+let currentMusicSearch = "";
+
 document.addEventListener("DOMContentLoaded", () => {
     const year = document.querySelector("#year");
     if (year) year.textContent = new Date("year").getFullYear();
@@ -280,16 +284,16 @@ async function loadMusicLibrary() {
         tracks = allGroups.flat();
         if (!tracks.length) tracks = await loadMusicManifest();
     }
-    const limit = Number(library.dataset.limit || 0);
-    const visibleTracks = limit ? tracks.slice(0, limit) : tracks;
 
-    if (!visibleTracks.length) {
+    if (!tracks.length) {
         library.innerHTML = "<p class=\"muted\">No music files found yet. Upload audio files and cover art to the Music folders, then publish the repo.</p>";
         return;
     }
 
-    setupTabs(tracks);
-    renderTracks(visibleTracks, library);
+    allMusicTracks = tracks;
+    setupTabs();
+    setupSearch();
+    filterAndRenderMusic();
 
     // Find the latest drop based on date
     let latestTrack = tracks[0];
@@ -304,11 +308,11 @@ async function loadMusicLibrary() {
     setupFeatured(latestTrack);
 }
 
-function setupTabs(tracks) {
+function setupTabs() {
     const tabs = document.querySelector("#music-tabs");
     if (!tabs) return;
 
-    const categories = ["All", ...new Set(tracks.map(track => track.category))];
+    const categories = ["All", ...new Set(allMusicTracks.map(track => track.category))];
     tabs.innerHTML = categories.map((category, index) => `<button class="button ${index === 0 ? "active" : ""}" type="button" data-category="${category}">${category}</button>`).join("");
 
     tabs.addEventListener("click", event => {
@@ -316,13 +320,55 @@ function setupTabs(tracks) {
         if (!button) return;
         tabs.querySelectorAll("button").forEach(tab => tab.classList.remove("active"));
         button.classList.add("active");
-        const category = button.dataset.category;
-        const filtered = category === "All" ? tracks : tracks.filter(track => track.category === category);
-        renderTracks(filtered, document.querySelector("#music-library"));
+        currentMusicCategory = button.dataset.category;
+        filterAndRenderMusic();
     });
 }
 
+function setupSearch() {
+    const searchInput = document.querySelector("#music-search");
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", event => {
+        currentMusicSearch = event.target.value;
+        filterAndRenderMusic();
+    });
+}
+
+function filterAndRenderMusic() {
+    const library = document.querySelector("#music-library");
+    if (!library) return;
+
+    let filtered = allMusicTracks;
+
+    // Apply category filter
+    if (currentMusicCategory !== "All") {
+        filtered = filtered.filter(track => track.category === currentMusicCategory);
+    }
+
+    // Apply search query filter
+    if (currentMusicSearch) {
+        const query = currentMusicSearch.toLowerCase().trim();
+        filtered = filtered.filter(track => {
+            const titleMatch = (track.title || "").toLowerCase().includes(query);
+            const artistMatch = (track.artist || "").toLowerCase().includes(query);
+            const albumMatch = (track.album || "").toLowerCase().includes(query);
+            return titleMatch || artistMatch || albumMatch;
+        });
+    }
+
+    // Apply limit if defined
+    const limit = Number(library.dataset.limit || 0);
+    const visibleTracks = limit ? filtered.slice(0, limit) : filtered;
+
+    renderTracks(visibleTracks, library);
+}
+
 function renderTracks(tracks, container) {
+    if (!tracks.length) {
+        container.innerHTML = `<p class="muted" style="grid-column: 1 / -1; text-align: center; padding: 2.5rem; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.05em; text-transform: uppercase;">No matching tracks found.</p>`;
+        return;
+    }
     const hasDockedPlayer = Boolean(document.querySelector("#main-audio"));
     const singles = tracks.map((track, index) => ({ ...track, originalIndex: index })).filter(track => track.category === "Singles");
     const groupedTracks = tracks.map((track, index) => ({ ...track, originalIndex: index })).filter(track => track.category !== "Singles");
@@ -357,9 +403,35 @@ function renderTracks(tracks, container) {
         });
     });
 
-    const singlesHtml = singles.map(track => renderSingleTrackCard(track, hasDockedPlayer)).join("");
-    const groupHtml = [...releaseGroups.values()].map(group => renderReleaseFolder(group, hasDockedPlayer)).join("");
-    container.innerHTML = singlesHtml + groupHtml;
+    const items = [
+        ...singles.map(track => ({
+            date: track.date || "",
+            year: track.year || "",
+            html: renderSingleTrackCard(track, hasDockedPlayer)
+        })),
+        ...[...releaseGroups.values()].map(group => {
+            const groupDates = group.tracks.map(t => t.date).filter(Boolean);
+            const latestDate = groupDates.length > 0 ? [...groupDates].sort().reverse()[0] : "";
+            const groupYear = group.tracks.find(t => t.year)?.year;
+            return {
+                date: latestDate,
+                year: groupYear || "",
+                html: renderReleaseFolder(group, hasDockedPlayer)
+            };
+        })
+    ];
+
+    // Sort chronologically (most recent first)
+    items.sort((a, b) => {
+        const yearA = a.year || (a.date ? a.date.split('-')[0] : "");
+        const yearB = b.year || (b.date ? b.date.split('-')[0] : "");
+        if (yearA !== yearB) {
+            return yearB.localeCompare(yearA);
+        }
+        return b.date.localeCompare(a.date);
+    });
+
+    container.innerHTML = items.map(item => item.html).join("");
 
     container.querySelectorAll("[data-track-index]").forEach(button => {
         button.addEventListener("click", () => setPlayerTrack(tracks[Number(button.dataset.trackIndex)]));
@@ -394,7 +466,7 @@ function renderSingleTrackCard(track, hasDockedPlayer) {
 }
 
 function renderReleaseFolder(group, hasDockedPlayer) {
-    const groupYear = group.tracks[0]?.year;
+    const groupYear = group.tracks.find(t => t.year)?.year || group.tracks.find(t => t.date && /\b\d{4}\b/.test(t.date))?.date.match(/\b\d{4}\b/)[0];
     const metaParts = [group.category ? `${group.category}${groupYear ? ` (${groupYear})` : ""}` : groupYear, `${group.tracks.length} song${group.tracks.length === 1 ? "" : "s"}`].filter(Boolean);
     return `
         <details class="music-folder">
