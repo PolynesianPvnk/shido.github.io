@@ -30,6 +30,13 @@ let allMusicTracks = [];
 let currentMusicCategory = "All";
 let currentMusicSearch = "";
 
+let playbackQueue = [];
+let currentQueueIndex = -1;
+let shuffleQueue = [];
+let isShuffle = false;
+let repeatMode = "none"; // "none" | "all" | "one"
+let currentTracksInView = [];
+
 document.addEventListener("DOMContentLoaded", () => {
     const year = document.querySelector("#year");
     if (year) year.textContent = new Date("year").getFullYear();
@@ -38,6 +45,12 @@ document.addEventListener("DOMContentLoaded", () => {
     loadMusicLibrary();
     loadBeatStore();
     loadLiveSection();
+
+    const audio = document.querySelector("#main-audio");
+    if (audio) {
+        audio.addEventListener("ended", playNextTrack);
+    }
+    initPlayerControls();
 });
 
 function initInfoModal() {
@@ -436,10 +449,15 @@ function renderTracks(tracks, container) {
     // Group all Singles first, followed by Folders
     const items = [...singlesList, ...groupsList];
 
+    currentTracksInView = tracks;
+
     container.innerHTML = items.map(item => item.html).join("");
 
     container.querySelectorAll("[data-track-index]").forEach(button => {
-        button.addEventListener("click", () => setPlayerTrack(tracks[Number(button.dataset.trackIndex)]));
+        button.addEventListener("click", () => {
+            const index = Number(button.dataset.trackIndex);
+            playTrackFromQueue(index);
+        });
     });
 
     // Info buttons click handler
@@ -462,7 +480,7 @@ function renderSingleTrackCard(track, hasDockedPlayer) {
                 <h3>${escapeHtml(track.title)}</h3>
                 <p class="card-meta">${escapeHtml(metaParts.join(" / "))}</p>
                 <div class="card-actions" style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-                    ${hasDockedPlayer ? `<button class="button primary" type="button" data-track-index="${track.originalIndex}">Play</button>` : `<audio controls preload="metadata" src="${track.audioUrl}"></audio>`}
+                    ${hasDockedPlayer ? `<button class="button primary" type="button" data-track-index="${track.originalIndex}">Play</button>` : `<audio controls controlsList="nodownload" oncontextmenu="return false;" preload="metadata" src="${track.audioUrl}"></audio>`}
                     <button class="button info-button" type="button" data-info-track="${track.originalIndex}">Info</button>
                 </div>
             </div>
@@ -493,7 +511,7 @@ function renderReleaseFolder(group, hasDockedPlayer) {
                             <strong>${escapeHtml(track.title)}</strong>
                             <small>${escapeHtml(track.artist || "X/i\\D")}</small>
                         </span>
-                        ${hasDockedPlayer ? `<button class="button primary" type="button" data-track-index="${track.originalIndex}">Play</button>` : `<audio controls preload="metadata" src="${track.audioUrl}"></audio>`}
+                        ${hasDockedPlayer ? `<button class="button primary" type="button" data-track-index="${track.originalIndex}">Play</button>` : `<audio controls controlsList="nodownload" oncontextmenu="return false;" preload="metadata" src="${track.audioUrl}"></audio>`}
                     </div>
                 `).join("")}
             </div>
@@ -563,7 +581,7 @@ function renderBeats(beats, container) {
             <div class="card-body">
                 <h3>${beat.title}</h3>
                 <p class="card-meta">${[beat.bpm && `${beat.bpm} BPM`, beat.key, beat.license].filter(Boolean).join(" / ") || "License details coming soon"}</p>
-                <audio controls preload="metadata" src="${beat.audioUrl}"></audio>
+                <audio controls controlsList="nodownload" oncontextmenu="return false;" preload="metadata" src="${beat.audioUrl}"></audio>
                 <a class="button primary" href="${beat.paymentUrl || `mailto:${SITE_CONFIG.contactEmail}?subject=Beat license: ${encodeURIComponent(beat.title)}`}">${beat.price ? `Buy ${beat.price}` : "Request License"}</a>
             </div>
         </article>
@@ -584,6 +602,163 @@ function loadLiveSection() {
                 <span class="muted">${vod.date}</span>
             </a>
         `).join("");
+    }
+}
+
+function playTrackFromQueue(index) {
+    if (index < 0 || index >= currentTracksInView.length) return;
+
+    playbackQueue = [...currentTracksInView];
+
+    if (isShuffle) {
+        currentQueueIndex = index;
+        generateShuffleQueue(index);
+    } else {
+        currentQueueIndex = index;
+    }
+
+    playCurrentTrack();
+}
+
+function generateShuffleQueue(startIndex) {
+    const indices = Array.from({ length: playbackQueue.length }, (_, i) => i);
+    const filteredIndices = indices.filter(idx => idx !== startIndex);
+
+    for (let i = filteredIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filteredIndices[i], filteredIndices[j]] = [filteredIndices[j], filteredIndices[i]];
+    }
+
+    shuffleQueue = [startIndex, ...filteredIndices];
+    currentQueueIndex = 0;
+}
+
+function playCurrentTrack() {
+    let trackIndex = currentQueueIndex;
+    if (isShuffle) {
+        trackIndex = shuffleQueue[currentQueueIndex];
+    }
+
+    if (trackIndex < 0 || trackIndex >= playbackQueue.length) return;
+
+    const track = playbackQueue[trackIndex];
+    setPlayerTrack(track);
+}
+
+function playNextTrack() {
+    const audio = document.querySelector("#main-audio");
+    if (!audio) return;
+
+    if (repeatMode === "one") {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+        return;
+    }
+
+    const queueLength = isShuffle ? shuffleQueue.length : playbackQueue.length;
+    if (queueLength === 0) return;
+
+    if (currentQueueIndex < queueLength - 1) {
+        currentQueueIndex++;
+        playCurrentTrack();
+    } else {
+        if (repeatMode === "all") {
+            currentQueueIndex = 0;
+            playCurrentTrack();
+        } else {
+            // End of queue reached, do not play further
+        }
+    }
+}
+
+function playPrevTrack() {
+    const audio = document.querySelector("#main-audio");
+    if (!audio) return;
+
+    if (audio.currentTime > 3) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+        return;
+    }
+
+    const queueLength = isShuffle ? shuffleQueue.length : playbackQueue.length;
+    if (queueLength === 0) return;
+
+    if (currentQueueIndex > 0) {
+        currentQueueIndex--;
+        playCurrentTrack();
+    } else {
+        if (repeatMode === "all") {
+            currentQueueIndex = queueLength - 1;
+            playCurrentTrack();
+        } else {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+        }
+    }
+}
+
+function initPlayerControls() {
+    const shuffleBtn = document.querySelector("#player-shuffle");
+    const prevBtn = document.querySelector("#player-prev");
+    const nextBtn = document.querySelector("#player-next");
+    const repeatBtn = document.querySelector("#player-repeat");
+
+    if (shuffleBtn) {
+        shuffleBtn.addEventListener("click", () => {
+            isShuffle = !isShuffle;
+            if (isShuffle) {
+                shuffleBtn.classList.add("active");
+                shuffleBtn.textContent = "SHUF (ON)";
+                shuffleBtn.title = "Shuffle (On)";
+
+                if (playbackQueue.length > 0 && currentQueueIndex !== -1) {
+                    let activeTrackIndex = currentQueueIndex;
+                    if (shuffleQueue.length > 0) {
+                        activeTrackIndex = shuffleQueue[currentQueueIndex];
+                    }
+                    generateShuffleQueue(activeTrackIndex);
+                }
+            } else {
+                shuffleBtn.classList.remove("active");
+                shuffleBtn.textContent = "SHUF";
+                shuffleBtn.title = "Shuffle (Off)";
+
+                if (playbackQueue.length > 0 && currentQueueIndex !== -1 && shuffleQueue.length > 0) {
+                    currentQueueIndex = shuffleQueue[currentQueueIndex];
+                }
+                shuffleQueue = [];
+            }
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener("click", playPrevTrack);
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener("click", playNextTrack);
+    }
+
+    if (repeatBtn) {
+        repeatBtn.addEventListener("click", () => {
+            if (repeatMode === "none") {
+                repeatMode = "all";
+                repeatBtn.classList.add("active");
+                repeatBtn.textContent = "REP (ALL)";
+                repeatBtn.title = "Repeat (All)";
+            } else if (repeatMode === "all") {
+                repeatMode = "one";
+                repeatBtn.classList.add("active");
+                repeatBtn.textContent = "REP (ONE)";
+                repeatBtn.title = "Repeat (One)";
+            } else {
+                repeatMode = "none";
+                repeatBtn.classList.remove("active");
+                repeatBtn.textContent = "REP";
+                repeatBtn.title = "Repeat (Off)";
+            }
+        });
     }
 }
 
